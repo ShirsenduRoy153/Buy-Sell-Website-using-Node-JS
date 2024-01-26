@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Website</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        nav input[type="text"] {
+            width: 300px;
+        }
+        
+        section {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        
+        .category-box {
+            width: 200px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .category-box img {
+            max-width: 100%;
+            height: 150px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .suggestions {
+            position: absolute;
+            width: 300px;
+            z-index: 1;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .suggestions a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .suggestions a:hover {
+            background-color: #eee;
+        }
+        
+        .category-box,
+        button {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .category-box:hover,
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn {
+            border: 2px solid #c9c8c8;
+            border-radius: 100px;
+            margin: 0 5px;
+        }
+        
+        .btn-danger {
+            border-color: #ebe40c;
+            background-color: #070401;
+            color: #fff;
+        }
+        /* Style for profile button */
+        
+        .btn-primary {
+            border-color: #ffffff;
+            background-color: #625c68;
+            color: #fff;
+        }
+
+        .category-box,
+        button {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .category-box:hover,
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        
+        .dark-mode header {
+            background-color: #555;
+            /* Update the header background color */
+            color: #fff;
+        }
+        
+        .dark-mode nav {
+            background-color: #666;
+            /* Update the nav background color */
+            color: #fff;
+        }
+        
+        .dark-mode .category-box {
+            background-color: #333;
+            /* Update the category box background color */
+            color: #fff;
+        }
+        
+        .dark-mode footer {
+            background-color: #555;
+            /* Update the footer background color */
+            color: #fff;
+        }
+        
+        .dark-mode .btn {
+            border-color: #fff;
+            color: #fff;
+        }
+        
+        .dark-mode .suggestions {
+            background-color: #444;
+            /* Update the suggestions background color */
+            border-color: #555;
+            color: #fff;
+        }
+        
+        .dark-mode .suggestions a {
+            color: #fff;
+        }
+        
+        .dark-mode .suggestions a:hover {
+            background-color: #666;
+            /* Update the suggestions hover background color */
+        }
+        
+        section {
+            display: none;
+        }
+
+        #viewCartModal {
+            color: #000; /* Set text color to black */
+        }
+    </style>
+</head>
+
+<body>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <header class="bg-dark text-white d-flex justify-content-between align-items-center p-3">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#userProfileModal"><span style="color: #ffcc00;">👤</span> Profile</button>
+            <h1 class="mb-0">Sample <span style="font-size: 36px;">Website</span></h1>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitch" onchange="toggleSwitch(this)">
+            <label class="custom-control-label" for="customSwitch">Dark Mode</label>
+        </div>
+        <div>
+            <button class="btn btn-danger" onclick="logout()">
+                <span>💻</span> Log Out
+            </button>
+        </div>
+    </header>
+
+
+    <nav class="bg-secondary text-white">
+        {{!-- <div class="position-relative">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search for a category" oninput="showSuggestions()">
+            <div class="suggestions" id="suggestions"></div>
+        </div> --}}
+    </nav>
+
+    <div class="profile-box">
+    <div class="profile-heading">
+        <h5 id="profile-id" hidden>{{users.id}}</h5>
+    </div>
+    </div>
+
+     <div class="modal" id="userProfileModal" tabindex="-1" role="dialog" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userProfileModalLabel">User Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Display user information inside the modal body -->
+                    <div class="profile-box">
+                        <div class="profile-heading">
+                            <h3>Welcome!</h3>
+                            <h5 id="profile-id-modal" hidden>{{users.id}}</h5>
+                            <h5>{{users.firstname}} {{users.lastname}}</h5>
+                            <br>
+                            <h4>PERSONAL INFORMATION</h4>
+
+                            <h5>First Name: <input type="text" name="firstname" id="firstname" value="{{users.firstname}}"></h5>
+                            <h5>Last Name: <input type="text" name="lastname" id="lastname" value="{{users.lastname}}"></h5>
+                            <h5>Phone: <input type="text" name="phone" id="phone" value="{{users.phone}}"></h5>
+                            <h5>Email: <input type="text" name="email" id="email" value="{{users.email}}"></h5>
+                            <h5>Password: <input type="text" name="password" id="password" value="{{users.password}}"></h5>
+                            <h5>Address: <input type="text" name="address" id="address" value="{{users.address}}"></h5>
+                            <h5>State: <input type="text" name="state" id="state" value="{{users.state}}"></h5>
+                            <h5>City: <input type="text" name="city" id="city" value="{{users.city}}"></h5>
+                            {{!-- <h5>photo: </h5> --}}
+                            
+                            <button type="button" class="btn btn-secondary" id="saveButton">Save</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="container">
+        {{#each products}}
+            <div class="category-box" id="category" data-id="{{this.id}}">
+                <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
+                <h3>{{this.name}}</h3>
+                <p>{{this.desc}}</p>
+                <p>${{this.qty}}</p>
+                <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product</button>
+                <button type="button" class="btn add-to-cart-btn" id="cart_id" data-id="{{this.id}}" data-name="{{this.name}}">Add to Cart</button>
+            </div>
+        {{/each}}
+    </section>
+
+<button type="button" class="btn btn-primary view-cart-btn" data-toggle="modal" data-target="#viewCartModal">View Cart</button>
+
+    <div class="modal" id="viewCartModal" tabindex="-1" role="dialog" aria-labelledby="viewCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewCartModalLabel">View Cart</h5>
+                </div>
+                <div class="modal-body">
+                    <ul id="cart-list-modal"></ul>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn" id="buy_id" >Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white mt-5">
+        &copy; 2024 Sample Website
+    </footer>
+
+
+{{!-- VIEW --}}
+
+<div id="view_modal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 10px;">
+            <div class="modal-header">
+                <h2 class="modal-title">View</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="view_form" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="view_id" class="form-control" readonly>
+                    <div class="form-group">
+                        <label for="view_photo">Photo:</label>
+                        <img src="" id="view_photo" height="100px" width="100px">
+                    </div>
+                    <div class="form-group">
+                        <label for="view_name">Product's Name:</label>
+                        <input type="text" id="view_name" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="view_desc">Description:</label>
+                        <input type="text" id="view_desc" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="view_category">Category:</label>
+                        <input type="text" id="view_category" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="view_qty">Price:</label>
+                        <input type="text" id="view_qty" class="form-control" readonly>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).on('click', '#view_id', function() {
+        const id = $(this).data('id');
+        $("#view_modal").show();
+        $("#view_id").val(id);
+        $.ajax({
+            type:"POST",
+            url:"/view_details",
+            data:{id},
+            success:function(response){
+                console.log(response)
+
+                const code = response.showdata.code
+                $("#view_code").val(code);
+
+                const name = response.showdata.name
+                $("#view_name").val(name);
+
+                const desc = response.showdata.desc
+                $("#view_desc").val(desc);                
+
+                const category = response.showdata.category
+                $("#view_category").val(category);
+
+                const qty = response.showdata.qty
+                $("#view_qty").val(qty);
+
+                $("#view_photo").attr("src",response.showdata.photo)
+            }
+        })
+    });
+    
+    $(".close").on("click", function() {
+        $("#view_modal").hide();
+    });
+</script>
+
+<script>
+    $(document).on('click', '#saveButton', function() {
+            var userId = $("#profile-id-modal").text();
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            var phone = $("#phone").val();
+            var email = $("#email").val();
+            var password = $("#password").val();
+            var address = $("#address").val();
+            var state = $("#state").val();
+            var city = $("#city").val();
+            //var filedata = document.getElementById("photo");
+            $.ajax({
+                type: "POST",
+                url: "/update_user",
+                data: { 
+                    id : userId,
+                    firstname : firstname,
+                    lastname : lastname,
+                    phone : phone,
+                    email : email,
+                    password : password,
+                    address : address,
+                    state : state,
+                    city : city
+                 },
+                success: function(response) {
+                    console.log('Server response:', response);
+                    window.location.reload();
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+</script>
+
+<script>
+    // Existing scripts...
+
+    const cart = [];
+    let cartItems = [];  // Define cartItems array outside the functions to make it accessible globally
+
+    function updateCartListModal() {
+        const cartListModal = $('#cart-list-modal');
+        cartListModal.empty();
+
+        alert("Your Item is added to Cart");
+
+        cart.forEach(item => {
+            const listItem = $('<li>').text(`ID: ${item.id} NAME: ${item.name}`);
+            cartListModal.append(listItem);
+        });
+
+        // Update the cartItems array
+        cartItems = cart.map(item => item.id);
+    }
+
+    $(document).on('click', '#cart_id', function() {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        cart.push({ id, name });
+
+        updateCartListModal();
+    });
+</script>
+
+
+<!-- ORDER -->
+<script>
+    $(document).on('click', '#buy_id', function() {
+        const cartItems = cart.map(item => item.id);
+        // Check if the cart is empty
+        if (cartItems.length === 0) {
+            alert("Please add items to the cart before placing an order.");
+            return;
+        }
+        
+        alert(`You are about to place an order with the following items:\n${JSON.stringify(cartItems)}`);
+        
+        $.ajax({
+            type: "POST",
+            url: "/user_place_order",
+            data: { cartItems: cartItems },
+            success: function(response) {
+                console.log(response);
+                $("#viewCartModal").modal('hide');
+                location.reload();
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    });
+</script>
+
+<script>
+
+    function logout() {
+        window.location.href = 'http://localhost:3000';
+    }
+
+    function toggleSwitch(element) {
+        const body = document.body;
+        if (element.checked) {
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('section').style.display = 'flex';
+    });
+</script>
+
+</body>
+
+</html>

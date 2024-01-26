@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        input[type="text"],
+        input[type="phone"],
+        input[type="tel"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            /* Added 3D transform style */
+        }
+        
+        input[type="text"]:hover,
+        input[type="phone"]:hover,
+        input[type="tel"]:hover,
+        input[type="password"]:hover {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(1.02);
+            /* Scale effect on hover */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Shadow effect on hover */
+        }
+        
+        #signup_btn {
+            display: block;
+            width: calc(100% - 20px);
+            padding: 10px;
+            background-color: #727d77;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        #signup_btn:hover {
+            background-color: #d1d9e2;
+            transform: scale(1.05);
+            /* Scale effect on hover */
+        }
+        
+        #signup_btn:hover {
+            background-color: #c5cdd6;
+            animation: dance 0.5s ease infinite;
+        }
+        
+        @keyframes dance {
+            0% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-5px);
+            }
+            50% {
+                transform: translateY(0);
+            }
+            75% {
+                transform: translateY(5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <style>
+        body {
+            background: linear-gradient(to left,  #7da1b7, #96b7b7);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #signup {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s ease;
+            position: relative;
+            /* Added position relative */
+        }
+        
+        #signup:hover {
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        #signup h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        input[type="text"],
+        input[type="phone"],
+        input[type="tel"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            /* Adjusted width to prevent overflow */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: background-color 0.3s ease;
+        }
+        
+        input[type="text"]:hover,
+        input[type="phone"]:hover,
+        input[type="tel"]:hover,
+        input[type="password"]:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+        
+        #signup_btn {
+            display: block;
+            width: calc(100% - 20px);
+            /* Adjusted width to prevent overflow */
+            padding: 10px;
+            background-color: #727d77;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        #signup_btn:hover {
+            background-color: #acb9c7;
+        }
+        
+        #signup_prompt {
+            text-align: center;
+            color: #666;
+        }
+        
+        .users-heading {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 5px solid #f2ff00;
+            padding: 10px;
+            color: #333;
+        }
+        
+        .users-symbol {
+            font-size: 40px;
+            color: #fff700;
+        }
+        /* Curvy-looking box for "signup" */
+        
+        .curvy-box {
+            background-color: #727d77;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 0 auto;
+            width: fit-content;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="users-heading">
+        Sample Website
+        <span class="users-symbol">&lt;/&gt;</span>
+    </div>
+
+    <h1 id="category" hidden>{{categories}}</h1>
+
+    <div id="signup">
+        <h2>Sign Up</h2>
+        <form id="signup_form">
+            <div class="form-group">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname" required>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Contact:</label>
+                <input type="phone" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" required>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" id="signup_btn">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="/user_main_login">Log In</a></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+
+    <script>
+        function getCategory() {
+            return document.getElementById('category').textContent.trim();
+        }
+        $(document).ready(function () {
+            $("#signup_form").validate({
+                rules: {
+                    firstname: {
+                        required: true
+                    },
+                    lastname: {
+                        required: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    phone: {
+                        required: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6
+                    },
+                },
+                submitHandler: function (form) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/user_postsignup",
+                        data: $("#signup_form").serialize(),
+                        success: function (response) {
+                            if (response.code == 200) {
+                                console.log(response.userId);
+                                const category = encodeURIComponent(getCategory());
+                                window.location.href = `http://localhost:3000/user_category_in/${category}/${response.userId}`
+                            } else {
+                                alert("Wrong Credentials!!");
+                                window.location.reload();
+                            }
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -7,7 +7,7 @@
     <style>
         /* Global styles */
         body {
-            background: linear-gradient(to right, #CBC3E3, #90EE90);
+            background: linear-gradient(to right, #bebcbc, #8FBC8F);
         }
 
         /* Login form styles */
@@ -68,7 +68,7 @@
             display: block;
             width: 100%;
             padding: 10px;
-            background-color: #CBC3E3;
+            background-color: #8FBC8F;
             color: white;
             border: none;
             border-radius: 5px;
@@ -156,7 +156,8 @@
                         data: $("#login_form").serialize(),
                         success: function (response) {
                             if (response.code == 200) {
-                                window.location.href = `http://localhost:3000/admin`
+                                console.log(response.userId);
+                                window.location.href = `http://localhost:3000/admin/${response.userId}`
                             } else {
                                 alert("wrong credentials!!");
                                 window.location.reload();

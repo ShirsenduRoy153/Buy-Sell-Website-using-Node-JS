@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Website</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        nav input[type="text"] {
+            width: 300px;
+        }
+        
+        section {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        
+        .category-box {
+            width: 200px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .category-box img {
+            max-width: 100%;
+            height: 150px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .suggestions {
+            position: absolute;
+            width: 300px;
+            z-index: 1;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .suggestions a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .suggestions a:hover {
+            background-color: #eee;
+        }
+        
+        .category-box,
+        button {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .category-box:hover,
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn {
+            border: 2px solid #fff;
+            border-radius: 100px;
+            margin: 0 5px;
+        }
+        
+        .btn-danger {
+            border-color: #ebe40c;
+            background-color: #070401;
+            color: #fff;
+        }
+        /* Style for profile button */
+        
+        .btn-primary {
+            border-color: #ffffff;
+            background-color: #625c68;
+            color: #fff;
+        }
+        
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        
+        .dark-mode header {
+            background-color: #555;
+            /* Update the header background color */
+            color: #fff;
+        }
+        
+        .dark-mode nav {
+            background-color: #666;
+            /* Update the nav background color */
+            color: #fff;
+        }
+        
+        .dark-mode .category-box {
+            background-color: #333;
+            /* Update the category box background color */
+            color: #fff;
+        }
+        
+        .dark-mode footer {
+            background-color: #555;
+            /* Update the footer background color */
+            color: #fff;
+        }
+        
+        .dark-mode .btn {
+            border-color: #fff;
+            color: #fff;
+        }
+        
+        .dark-mode .suggestions {
+            background-color: #444;
+            /* Update the suggestions background color */
+            border-color: #555;
+            color: #fff;
+        }
+        
+        .dark-mode .suggestions a {
+            color: #fff;
+        }
+        
+        .dark-mode .suggestions a:hover {
+            background-color: #666;
+            /* Update the suggestions hover background color */
+        }
+        
+        section {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="bg-dark text-white d-flex justify-content-between align-items-center p-3">
+        <div class="d-flex align-items-center">
+            <h1 class="mb-0">Sample <span style="font-size: 36px;">Website</span></h1>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitch" onchange="toggleSwitch(this)">
+            <label class="custom-control-label" for="customSwitch">Dark Mode</label>
+        </div>
+        <div>
+            <button class="btn btn-danger" onclick="login()">
+                <span>💻</span> Login
+            </button>
+        </div>
+    </header>
+
+
+    <nav class="bg-secondary text-white">
+        {{!-- <div class="position-relative">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search for a category" oninput="showSuggestions()">
+            <div class="suggestions" id="suggestions"></div>
+        </div> --}}
+    </nav>
+
+    <section class="container">
+        {{#each categories}}
+            <div class="category-box" id="category" data-id="{{this.id}}">
+                <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
+                <h3>{{this.name}}</h3>
+                <p>{{this.desc}}</p>
+            </div>
+        {{/each}}
+    </section>
+
+    <footer class="bg-dark text-white mt-5">
+        &copy; 2024 Sample Website
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    const suggestions = [];
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('section').style.display = 'flex';
+
+    const categoryBoxes = document.querySelectorAll('.category-box');
+    categoryBoxes.forEach(box => {
+        box.addEventListener('click', function () {
+            const name = box.querySelector('h3').innerText;
+
+            const url = `/user_category_out/${encodeURIComponent(name)}`;
+
+            window.location.href = url;
+        });
+    });
+});
+
+
+
+    function login() {
+        window.location.href = 'http://localhost:3000/user_main_login';
+    }
+
+    function toggleSwitch(element) {
+        const body = document.body;
+        if (element.checked) {
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('section').style.display = 'flex';
+    });
+</script>
+
+</body>
+
+</html>
