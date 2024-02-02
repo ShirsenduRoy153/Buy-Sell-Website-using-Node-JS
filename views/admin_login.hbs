@@ -152,7 +152,7 @@
                 submitHandler: function (form) {
                     $.ajax({
                         type: "POST",
-                        url: "/admin_login",
+                        url: "/post_admin_login",
                         data: $("#login_form").serialize(),
                         success: function (response) {
                             if (response.code == 200) {

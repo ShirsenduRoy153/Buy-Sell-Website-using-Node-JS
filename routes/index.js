@@ -9,9 +9,9 @@ const { admin_registration } = require('../models');
 const { category } = require('../models');
 const { product } = require('../models');
 const { order } = require('../models');
-
 const passport = require('passport');
-const auth = require("../middleware/auth");
+const auth_admin = require("../middleware/auth_admin");
+const auth_main_user = require("../middleware/auth_main_user");
 
 //----------------------------------Photos----------------------------//
 const multer = require('multer');
@@ -186,6 +186,26 @@ router.post('/user_postlogin', async(req, res) => {
 
 });
 
+//
+//
+//
+//
+//
+//
+// router.post("/user_postlogin", passport.authenticate("local_main_user", {
+//     failureRedirect: "/user_main_login",
+//     failureFlash: true
+// }), async(req, res) => {
+//     const userId = req.user.id;
+//     console.log("UserId = ", userId)
+//     res.json({
+//         success: true,
+//         code: 200,
+//         message: "successfull login",
+//         userId: userId
+//     })
+// })
+
 //---X---//
 
 //---P O S T  U S E R  S I G N U P---//
@@ -254,8 +274,7 @@ router.get("/admin_login", async(req, res, next) => {
     res.render('admin_login', { title: 'admin_login' })
 })
 
-router.post("/admin_login", passport.authenticate("local", {
-
+router.post("/post_admin_login", passport.authenticate("local", {
     failureRedirect: "/admin_login",
     failureFlash: true
 }), async(req, res) => {
@@ -272,13 +291,14 @@ router.post("/admin_login", passport.authenticate("local", {
 
 //---A D M I N---//
 //---A D M I N---//
-router.get("/admin/:id", auth, async(req, res, next) => {
+router.get("/admin/:id", auth_admin, async(req, res, next) => {
     console.log(req.params.id)
+    const userId = req.params.id
 
     const admins_registrations = await admin_registration.findOne({
         where: { id: req.params.id }
     })
-    res.render('admin', { title: 'admin', admins_registrations })
+    res.render('admin', { title: 'admin', admins_registrations, userId })
 })
 
 router.post("/add_admin", async(req, res, next) => {
@@ -288,6 +308,24 @@ router.post("/add_admin", async(req, res, next) => {
     const phone = req.body.phone
     const password = req.body.password
     await admin_registration.create({ firstname, lastname, email, phone, password })
+    res.json({
+        success: true,
+        code: 200
+    })
+})
+
+router.post('/update_admin', async(req, res) => {
+    const userId = req.body.id
+    const firstname = req.body.firstname
+    const lastname = req.body.lastname
+    const email = req.body.email
+    const phone = req.body.phone
+    const password = req.body.password
+    await admin_registration.update({ firstname, lastname, email, phone, password }, {
+        where: {
+            id: userId
+        }
+    })
     res.json({
         success: true,
         code: 200

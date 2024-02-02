@@ -146,12 +146,15 @@
             </button>
         </div>
         <div class="modal-body">
-            <p>Firstname: {{admins_registrations.firstname}}</p>
-            <p>Lastname: {{admins_registrations.lastname}}</p>
-            <p>Phone: {{admins_registrations.phone}}</p>
-            <p>Password: {{admins_registrations.password}}</p>
+            <input type="number" value="{{userId}}" id="userId" hidden>
+            <p>Firstname:<input type="text" value="{{admins_registrations.firstname}}" id="firstname"></p>
+            <p>Lastname: <input type="text" value="{{admins_registrations.lastname}}" id="lastname"></p>
+            <p>Email: <input type="text" value="{{admins_registrations.email}}" id="email"></p>
+            <p>Phone:<input type="text" value="{{admins_registrations.phone}}" id="phone"></p>
+            <p>Password:<input type="text" value="{{admins_registrations.password}}" id="password"></p>
         </div>
         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="saveButton">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
         </div>
@@ -193,4 +196,34 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).on('click', '#saveButton', function() {
+            var userId = $("#userId").val();
+            var firstname = $("#firstname").val();
+            var lastname = $("#lastname").val();
+            var phone = $("#phone").val();
+            var email = $("#email").val();
+            var password = $("#password").val();
+            $.ajax({
+                type: "POST",
+                url: "/update_admin",
+                data: { 
+                    id : userId,
+                    firstname : firstname,
+                    lastname : lastname,
+                    phone : phone,
+                    email : email,
+                    password : password
+                 },
+                success: function(response) {
+                    console.log('Server response:', response);
+                    window.location.reload();
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+    </script>
 </body>

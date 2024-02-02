@@ -237,7 +237,6 @@
                         data: $("#login_form").serialize(),
                         success: function(response) {
                             if (response.code == 200) {
-                                console.log(response.userId);
                                 window.location.href = `http://localhost:3000/user_main_in/${response.userId}`
                             } else {
                                 alert("Wrong Credentials!!");

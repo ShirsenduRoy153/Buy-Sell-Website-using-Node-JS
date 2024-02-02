@@ -26,7 +26,8 @@ const session = require("express-session");
 const flash = require("express-flash");
 
 const passport = require('passport')
-require("./config/passport")(passport)
+require("./config/passport_admin")(passport)
+require("./config/passport_main_user")(passport)
 
 app.use(passport.initialize())
 app.use(session({
