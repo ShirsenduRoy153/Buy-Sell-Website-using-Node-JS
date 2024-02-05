@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { cart } = require('../models');
 const { user } = require('../models');
-const { admin_registration } = require('../models');
+const { admin } = require('../models');
 const { category } = require('../models');
 const { product } = require('../models');
 const { order } = require('../models');
@@ -334,7 +334,7 @@ router.get("/admin/:id", auth_admin, async(req, res, next) => {
     console.log(req.params.id)
     const userId = req.params.id
 
-    const admins_registrations = await admin_registration.findOne({
+    const admins = await admin.findOne({
         where: { id: req.params.id }
     })
 
@@ -351,7 +351,7 @@ router.get("/admin/:id", auth_admin, async(req, res, next) => {
 
     console.log(totalPrice, numberOfOrders, numberOfCustomer)
 
-    res.render('admin', { title: 'admin', admins_registrations, userId, totalPrice, numberOfOrders, numberOfCustomer })
+    res.render('admin', { title: 'admin', admins, userId, totalPrice, numberOfOrders, numberOfCustomer })
 })
 
 router.post("/add_admin", async(req, res, next) => {
@@ -360,7 +360,7 @@ router.post("/add_admin", async(req, res, next) => {
     const email = req.body.email
     const phone = req.body.phone
     const password = req.body.password
-    await admin_registration.create({ firstname, lastname, email, phone, password })
+    await admin.create({ firstname, lastname, email, phone, password })
     res.json({
         success: true,
         code: 200
@@ -374,7 +374,7 @@ router.post('/update_admin', async(req, res) => {
     const email = req.body.email
     const phone = req.body.phone
     const password = req.body.password
-    await admin_registration.update({ firstname, lastname, email, phone, password }, {
+    await admin.update({ firstname, lastname, email, phone, password }, {
         where: {
             id: userId
         }

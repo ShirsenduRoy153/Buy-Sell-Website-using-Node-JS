@@ -1,4 +1,4 @@
-const admin_registration = require('../models').admin_registration;
+const admin = require('../models').admin;
 //const { hashSync, compareSync } = require('bcrypt');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
@@ -9,7 +9,7 @@ module.exports = (passport) => {
         passwordField: "password",
         passReqToCallback: true
     }, (req, phone, password, done) => {
-        const user = admin_registration.findOne({ raw: true, where: { phone: phone } }).then((user) => {
+        const user = admin.findOne({ raw: true, where: { phone: phone } }).then((user) => {
             if (user == null) {
                 return done(null, false);
             } else if (password === user.password) {
@@ -23,7 +23,7 @@ module.exports = (passport) => {
     passport.serializeUser((user, done) => done(null, user.id));
 
     passport.deserializeUser((id, done) => {
-        const fetchuser = (id) => admin_registration.findByPk(id);
+        const fetchuser = (id) => admin.findByPk(id);
         fetchuser(id).then((user) => {
             return done(null, user);
         })
