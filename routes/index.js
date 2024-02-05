@@ -2,8 +2,7 @@ const Sequelize = require('sequelize');
 const express = require('express');
 const router = express.Router();
 
-
-const { admin_shoes } = require('../models');
+const { cart } = require('../models');
 const { user } = require('../models');
 const { admin_registration } = require('../models');
 const { category } = require('../models');
@@ -11,7 +10,7 @@ const { product } = require('../models');
 const { order } = require('../models');
 const passport = require('passport');
 const auth_admin = require("../middleware/auth_admin");
-const auth_main_user = require("../middleware/auth_main_user");
+//const auth_main_user = require("../middleware/auth_main_user");
 
 //----------------------------------Photos----------------------------//
 const multer = require('multer');
@@ -105,34 +104,73 @@ router.get("/user_category_in/:name/:userId", async(req, res, next) => {
             category: req.params.name
         }
     });
+    let carts = await cart.findAll({
+        where: {
+            customer_id: req.params.userId
+        }
+    });
     const users = await user.findOne({
         where: { id: req.params.userId }
     })
-    res.render('user_category_in', { title: 'user_category_in', products, users })
+    res.render('user_category_in', { title: 'user_category_in', products, users, carts })
+})
+
+router.post('/add_to_cart', async(req, res) => {
+    console.log(req.body);
+    const customer_id = req.body.userId;
+    const order_id = req.body.productId;
+    const order_name = req.body.productName;
+
+    await cart.create({ customer_id, order_id, order_name });
+
+    res.status(200).json({
+        success: true,
+        code: 200,
+    });
 })
 
 router.post('/user_place_order', async(req, res) => {
-    console.log(req.body);
     try {
-        const selectedIDsArray = req.body['cartItems[]'];
+        const userId = req.body.id;
+        const users = await user.findOne({
+            where: {
+                id: userId
+            },
+            attributes: ['firstname', 'phone', 'address', 'lastname', 'email'],
+        });
+        const userName = users.firstname + " " + users.lastname;
+        const userAddress = users.address;
+        const userEmail = users.email;
+        const userPhone = users.phone;
+        console.log(userId);
+        const carts = await cart.findAll({
+            where: {
+                customer_id: userId
+            }
+        });
 
-        for (const id of selectedIDsArray) {
-            console.log('ID:', id);
-
-            const showdata = await product.findOne({
+        // Iterate over each cart item and create an order
+        for (const cartItem of carts) {
+            // Fetch product details for the current cart item
+            const productDetails = await product.findOne({
                 where: {
-                    id: id
+                    id: cartItem.order_id
                 },
-                attributes: ['code', 'name', 'category', 'qty'],
+                attributes: ['name', 'category', 'price'],
             });
+            const productId = cartItem.order_id
+            const productName = productDetails.name;
+            const category = productDetails.category;
+            const price = productDetails.price;
 
-            const productId = showdata.code;
-            const productName = showdata.name;
-            const category = showdata.category;
-            const quantity = showdata.qty;
-
-            await order.create({ productId, productName, quantity, category });
+            await order.create({ productId, productName, price, category, userId, userName, userEmail, userAddress, userPhone });
         }
+
+        await cart.destroy({
+            where: {
+                customer_id: userId
+            }
+        });
 
         res.status(200).json({
             success: true,
@@ -148,6 +186,7 @@ router.post('/user_place_order', async(req, res) => {
         });
     }
 });
+
 
 //---P O S T  U S E R  L O G I N---//
 router.post('/user_postlogin', async(req, res) => {
@@ -298,7 +337,21 @@ router.get("/admin/:id", auth_admin, async(req, res, next) => {
     const admins_registrations = await admin_registration.findOne({
         where: { id: req.params.id }
     })
-    res.render('admin', { title: 'admin', admins_registrations, userId })
+
+    orders = await order.findAll({
+        raw: true
+    })
+    const totalPrice = orders.reduce((acc, order) => acc + order.price, 0);
+    const numberOfOrders = orders.length;
+
+    users = await user.findAll({
+        raw: true
+    })
+    const numberOfCustomer = users.length;
+
+    console.log(totalPrice, numberOfOrders, numberOfCustomer)
+
+    res.render('admin', { title: 'admin', admins_registrations, userId, totalPrice, numberOfOrders, numberOfCustomer })
 })
 
 router.post("/add_admin", async(req, res, next) => {
@@ -337,6 +390,21 @@ router.post('/update_admin', async(req, res) => {
 
 //---C A T E G O R Y---//
 //---C A T E G O R Y---//
+router.get("/admin_user", async(req, res, next) => {
+    users = await user.findAll({
+        raw: true
+    })
+    res.render('admin_user', { title: 'admin_user', users })
+})
+
+
+router.get("/admin_order", async(req, res, next) => {
+    orders = await order.findAll({
+        raw: true
+    })
+    res.render('admin_order', { title: 'admin_order', orders })
+})
+
 router.get("/admin_category", async(req, res, next) => {
     categories = await category.findAll({
         raw: true
@@ -426,13 +494,12 @@ router.get("/admin_table", async(req, res, next) => {
 
 router.post("/add_product", upload.single("photo"), async(req, res, next) => {
     console.log(req.body)
-    const code = req.body.code
     const name = req.body.name
     const desc = req.body.desc
-    const qty = req.body.qty
+    const price = req.body.price
     const category = req.body.category
     const photo = req.file.destination.replace("public", "") + req.file.filename;
-    await product.create({ code, name, desc, qty, category, photo })
+    await product.create({ name, desc, price, category, photo })
     res.json({
         success: true,
         code: 200
@@ -448,7 +515,7 @@ router.post("/view_details", async(req, res) => {
         where: {
             id: req.body.id
         },
-        attributes: ['id', 'code', 'name', 'desc', 'category', 'qty', 'photo'],
+        attributes: ['id', 'name', 'desc', 'category', 'price', 'photo'],
     })
     res.json({ showdata })
 })
@@ -459,13 +526,12 @@ router.post("/view_details", async(req, res) => {
 router.post('/post_edit', async(req, res) => {
     console.log(req.body);
     const id = req.body.edit_id;
-    const code = req.body.edit_code;
     const name = req.body.edit_name;
     const desc = req.body.edit_desc;
     const category = req.body.edit_category;
-    const qty = req.body.edit_qty;
+    const price = req.body.edit_qty;
 
-    await admin_shoes.update({ code, name, desc, category, qty }, {
+    await admin_shoes.update({ name, desc, category, price }, {
         where: {
             id: id
         }
@@ -508,7 +574,7 @@ router.post("/view-details-shoes", async(req, res) => {
         where: {
             id: req.body.id
         },
-        attributes: ['p_id', 'p_name', 'category', 'qty', 'photo'],
+        attributes: ['p_id', 'p_name', 'category', 'price', 'photo'],
     })
     res.json({ showdata })
 })
@@ -521,9 +587,9 @@ router.post('/post_edit_shoes', async(req, res) => {
     const p_id = req.body.edit_p_id;
     const name = req.body.edit_name;
     const category = req.body.edit_category;
-    const qty = req.body.edit_qty;
+    const price = req.body.edit_qty;
 
-    await admin_shoes.update({ p_id, name, category, qty }, {
+    await admin_shoes.update({ p_id, name, category, price }, {
         where: {
             id: id
         }

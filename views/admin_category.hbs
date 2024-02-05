@@ -24,7 +24,7 @@
             display: inline-block; /* Make the buttons inline */
             background-color: #8FBC8F; /* Set the background color to green */
             border: none;
-            border-radius: 0px;
+            border-radius: 25px;
             margin-bottom: 5px;
             margin-left: 5px;
             margin-right: 5px;
@@ -35,6 +35,11 @@
         .delete-btn:hover,
         .edit-btn:hover {
             background-color: #CBC3E3; /* Change the hover color */
+        }
+
+        .table tbody td {
+            overflow-wrap: break-word;
+            max-width: 300px;
         }
 
         .sidebar {
@@ -162,12 +167,12 @@
                         <input type="text" id="name" name="name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="p_id">Description:</label>
-                        <input type="text" id="desc" name="desc" class="form-control">
+                        <label for="desc">Description:</label>
+                        <textarea id="desc" name="desc" class="form-control" rows="4"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="category_id" class="btn btn-success">Done</button>
+                    <button type="submit" id="category_id" class="btn btn-success">Add Category</button>
                 </div>
             </form>
         </div>
@@ -262,8 +267,8 @@ $(document).ready(function(){
                         <input type="text" id="edit_name" name="edit_name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="edit_desc">Description:</label>
-                        <input type="text" id="edit_desc" name="edit_desc" class="form-control">
+                        <label for="desc">Description:</label>
+                        <textarea id="edit_desc" name="desc" class="form-control" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="edit_photo">Photo:</label>

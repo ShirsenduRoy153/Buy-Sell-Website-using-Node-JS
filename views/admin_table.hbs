@@ -25,7 +25,7 @@
             display: inline-block; /* Make the buttons inline */
             background-color: #8FBC8F; /* Set the background color to green */
             border: none;
-            border-radius: 0px;
+            border-radius: 25px;
             margin-bottom: 5px;
             margin-left: 5px;
             margin-right: 5px;
@@ -107,6 +107,17 @@
         margin: 1.75rem auto;
     }
 
+    .modal-body {
+    overflow-wrap: break-word;
+    max-width: 150px;
+    }
+
+    .table tbody td {
+        overflow-wrap: break-word;
+        max-width: 300px;
+    }
+
+
     .modal-content {
         border-radius: 10px;
     }
@@ -158,16 +169,12 @@
                         <input type="file" id="photo" name="photo" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="p_id">Product Code :</label>
-                        <input type="text" id="code" name="code" class="form-control">
-                    </div>
-                    <div class="form-group">
                         <label for="name">Name :</label>
                         <input type="text" id="name" name="name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="p_id">Description:</label>
-                        <input type="text" id="desc" name="desc" class="form-control">
+                        <label for="desc">Description:</label>
+                        <textarea id="desc" name="desc" class="form-control" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="category">Category :</label>
@@ -178,12 +185,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="qty">Price :</label>
-                        <input type="text" id="qty" name="qty" class="form-control">
+                        <label for="price">Price :</label>
+                        <input type="text" id="price" name="price" class="form-control">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="product_id" class="btn btn-success">Done</button>
+                    <button type="submit" id="product_id" class="btn btn-success">Add Product</button>
                 </div>
             </form>
         </div>
@@ -205,21 +212,19 @@ $(".close").on("click", function() {
 $(document).ready(function(){
     $("#product_form").validate({
         submitHandler: function(form){
-                    var code = $('#code').val();
                     var name = $('#name').val();
                     var desc = $('#desc').val()
                     var category = $('#category').val();
-                    var qty = $('#qty').val();
+                    var price = $('#price').val();
                     var filedata = document.getElementById("photo");
                     const formdata = new FormData();
                     var file = filedata.files[0];
                     formdata.append("json", true);
                     formdata.append("desc", desc)
                     formdata.append("photo", file);
-                    formdata.append("code", code);
                     formdata.append("name", name);
                     formdata.append("category", category);
-                    formdata.append("qty", qty);
+                    formdata.append("price", price);
                     $.ajax({
                         type: "POST",
                         url: "/add_product",
@@ -247,11 +252,10 @@ $(document).ready(function(){
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Product Code</th>
                     <th>Name of Product</th>
                     <th>Description</th>
                     <th>Category</th>
-                    <th>Quantity</th>
+                    <th>Price</th>
                     <th>Photo</th>
                     <th>Actions</th>
                 </tr>
@@ -259,11 +263,10 @@ $(document).ready(function(){
             <tbody>
                 {{#each products}}
             <tr>
-                <td>{{this.code}}</td>
                 <td>{{this.name}}</td>
                 <td>{{this.desc}}</td>
                 <td>{{this.category}}</td>
-                <td>{{this.qty}}</td>
+                <td>{{this.price}}</td>
                 <td><img src="{{this.photo}}" height="100px" width="100px"></td>
                 <td>
                 <button type="button" class="view-btn" id="view_id" data-id="{{this.id}}">View</button>
@@ -289,24 +292,20 @@ $(document).ready(function(){
                 <div class="modal-body">
                     <input type="hidden" id="view_id" class="form-control" readonly>
                     <div class="form-group">
-                        <label for="view_code">Code:</label>
-                        <input type="text" id="view_code" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
                         <label for="view_name">Product's Name:</label>
                         <input type="text" id="view_name" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="view_desc">Description:</label>
-                        <input type="text" id="view_desc" class="form-control" readonly>
+                        <label for="desc">Description:</label>
+                        <textarea id="view_desc" name="desc" class="form-control" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="view_category">Category:</label>
                         <input type="text" id="view_category" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="view_qty">Quantity:</label>
-                        <input type="text" id="view_qty" class="form-control" readonly>
+                        <label for="view_price">Price:</label>
+                        <input type="text" id="view_price" class="form-control" readonly>
                     </div>
                     <div class="form-group">
                         <label for="view_photo">Photo:</label>
@@ -333,9 +332,6 @@ $(document).ready(function(){
             success:function(response){
                 console.log(response)
 
-                const code = response.showdata.code
-                $("#view_code").val(code);
-
                 const name = response.showdata.name
                 $("#view_name").val(name);
 
@@ -345,8 +341,8 @@ $(document).ready(function(){
                 const category = response.showdata.category
                 $("#view_category").val(category);
 
-                const qty = response.showdata.qty
-                $("#view_qty").val(qty);
+                const price = response.showdata.price
+                $("#view_price").val(price);
 
                 $("#view_photo").attr("src",response.showdata.photo)
             }
@@ -371,24 +367,20 @@ $(document).ready(function(){
                 <div class="modal-body">
                     <input type="hidden" id="edit_id" name="edit_id" class="form-control">
                     <div class="form-group">
-                        <label for="edit_code">Code:</label>
-                        <input type="text" id="edit_code" name="edit_code" class="form-control">
-                    </div>
-                    <div class="form-group">
                         <label for="edit_name">Product's Name:</label>
                         <input type="text" id="edit_name" name="edit_name" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="edit_desc">Description:</label>
-                        <input type="text" id="edit_desc" name="edit_desc" class="form-control">
+                        <label for="desc">Description:</label>
+                        <textarea id="edit_desc" name="desc" class="form-control" rows="4"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="edit_category">Category:</label>
                         <input type="text" id="edit_category" name="edit_category" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="edit_qty">Quantity:</label>
-                        <input type="text" id="edit_qty" name="edit_qty" class="form-control">
+                        <label for="edit_price">Price:</label>
+                        <input type="text" id="edit_price" name="edit_price" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="edit_photo">Photo:</label>
@@ -415,9 +407,6 @@ $(document).ready(function(){
             data:{id},
             success:function(response){
 
-                const code = response.showdata.code
-                $("#edit_code").val(code);
-
                 const name = response.showdata.name
                 $("#edit_name").val(name);
 
@@ -427,8 +416,8 @@ $(document).ready(function(){
                 const category = response.showdata.category
                 $("#edit_category").val(category);
 
-                const qty = response.showdata.qty
-                $("#edit_qty").val(qty);
+                const price = response.showdata.price
+                $("#edit_price").val(price);
 
                 $("#edit_photo").attr("src",response.showdata.photo);
             }
@@ -446,22 +435,19 @@ $(document).ready(function(){
             $("#edit_form").validate({
                 submitHandler: function(form) {
                     var id = $('#edit_id').val();
-                    var code = $('#edit_code').val();
                     var name = $('#edit_name').val();
                     var desc = $('#edit_desc').val();
-                    var code = $('#edit_code').val();
                     var category = $('#edit_category').val();
-                    var qty = $('#edit_qty').val();       
+                    var price = $('#edit_price').val();       
                     $.ajax({
                         type: "POST",
                         url: "/post_edit",
                         data: {
                             edit_id:id,
-                            edit_code:code,
                             edit_name:name,
                             edit_desc:desc,
                             edit_category:category,
-                            edit_qty:qty
+                            edit_price:price
                         },
                         success: function(response)  {
                             if (response.success == true) {

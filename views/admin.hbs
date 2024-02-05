@@ -40,7 +40,7 @@
     }
 
     .btn {
-        border-radius: 20px;
+        border-radius: 25px;
         font-size: 18px;
         font-weight: bold;
         padding: 10px 20px;
@@ -57,24 +57,21 @@
         width: 210px;
         position: fixed;
         z-index: 1;
-        top: px;
+        top: 65px;
         left: 0;
         background-color: #868d93;
         overflow-x: hidden;
-        padding-top: 70px;
+        padding-top: 40px;
     }
 
     .sidebar .btn-primary {
         display: block;
         width: 100%;
         text-align: left;
-        border-radius: 0;
-        margin-bottom: 1px;
+        border-radius: 25px 0 0 25px;
+        margin: 0;
+        margin-bottom: 15px;
         margin-left: 5px;
-    }
-
-    .sidebar .btn-primary:not(:last-child) {
-        margin-bottom: 5px; /* Adjust the margin-bottom value to control the distance between buttons */
     }
 
     .sidebar .btn-primary:hover {
@@ -91,9 +88,17 @@
         border-color: #CBC3E3;
     }
 
+    .main_header {
+        background-color: #000000;
+        color: #fff;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
     .main {
         margin-left: 200px;
-        padding: 0px 10px;
+        padding: 0px 5px 10px 10px;
     }
 
     .header {
@@ -160,37 +165,37 @@
         </div>
     </div>
     </div>
-
-
+    <div class="main_header">
+        <div class="header">Admin Panel</div>
+    </div>
     <div class="sidebar">
-        <a href="/admin_category" class="btn btn-primary category-btn" >Category</a>
-        <a href="/admin_table" class="btn btn-primary category-btn" >Tables</a>
-        <a href="/admin_login" class="btn btn-primary category-btn" >Button 3</a>
-        <a href="/admin_login" class="btn btn-primary category-btn" >Button 4</a>
+        <a href="/admin_category" class="btn btn-primary">Category</a>
+        <a href="/admin_table" class="btn btn-primary" >Tables</a>
+        <a href="/admin_order" class="btn btn-primary" >Orders</a>
+        <a href="/admin_user" class="btn btn-primary" >Customer Details</a>
     </div>
     <div class="main">
-        <div class="header">Admin Panel</div>
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-title">Total Sales</div>
-                        <div class="card-text">$10,000</div>
-                        <a href="#" class="btn btn-primary">View Details</a>
+                        <div class="card-text">$ {{totalPrice}}</div>
+                        <a href="/admin_order" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-title">Total Orders</div>
-                        <div class="card-text">100</div>
-                        <a href="#" class="btn btn-primary">View Details</a>
+                        <div class="card-text">{{numberOfOrders}}</div>
+                        <a href="/admin_order" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-title">Total Customers</div>
-                        <div class="card-text">50</div>
-                        <a href="#" class="btn btn-primary">View Details</a>
+                        <div class="card-text">{{numberOfCustomer}}</div>
+                        <a href="/admin_user" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
             </div>
@@ -227,3 +232,4 @@
         });
     </script>
 </body>
+</html>

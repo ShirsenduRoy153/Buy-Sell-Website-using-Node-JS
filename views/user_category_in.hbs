@@ -37,7 +37,7 @@
         nav input[type="text"] {
             width: 300px;
         }
-        
+
         section {
             padding: 20px;
             display: flex;
@@ -275,16 +275,16 @@
     </div>
 
     <section class="container">
-        {{#each products}}
-            <div class="category-box" id="category" data-id="{{this.id}}">
-                <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
-                <h3>{{this.name}}</h3>
-                <p>{{this.desc}}</p>
-                <p>${{this.qty}}</p>
-                <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product</button>
-                <button type="button" class="btn add-to-cart-btn" id="cart_id" data-id="{{this.id}}" data-name="{{this.name}}">Add to Cart</button>
-            </div>
-        {{/each}}
+    {{#each products}}
+        <div class="category-box" id="category" data-id="{{this.id}}">
+            <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
+            <h3>{{this.name}}</h3>
+            {{!-- <textarea rows="4" style="border: none; overflow: auto; outline: none; resize: none;">{{this.desc}}</textarea> --}}
+            <p>${{this.price}}</p>
+            <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product</button>
+            <button type="button" class="btn add-to-cart-btn" id="cart_id" data-id="{{this.id}}" data-name="{{this.name}}">Add to Cart</button>
+        </div>
+    {{/each}}
     </section>
 
 <button type="button" class="btn btn-primary view-cart-btn" data-toggle="modal" data-target="#viewCartModal">View Cart</button>
@@ -296,6 +296,9 @@
                     <h5 class="modal-title" id="viewCartModalLabel">View Cart</h5>
                 </div>
                 <div class="modal-body">
+                    {{#each carts}}
+                    <div class="cart-item" data-id="{{this.order_id}}">product ID : {{this.order_id}} Name : {{this.order_name}}</div>
+                    {{/each}}
                     <ul id="cart-list-modal"></ul>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn" id="buy_id" >Place Order</button>
@@ -332,16 +335,16 @@
                         <input type="text" id="view_name" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="view_desc">Description:</label>
-                        <input type="text" id="view_desc" class="form-control" readonly>
+                        <label for="desc">Description:</label>
+                        <textarea id="view_desc" name="desc" class="form-control" rows="4" readonly></textarea>
                     </div>
                     <div class="form-group">
                         <label for="view_category">Category:</label>
                         <input type="text" id="view_category" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="view_qty">Price:</label>
-                        <input type="text" id="view_qty" class="form-control" readonly>
+                        <label for="view_price">Price:</label>
+                        <input type="text" id="view_price" class="form-control" readonly>
                     </div>
                 </div>
             </form>
@@ -373,8 +376,8 @@
                 const category = response.showdata.category
                 $("#view_category").val(category);
 
-                const qty = response.showdata.qty
-                $("#view_qty").val(qty);
+                const price = response.showdata.price
+                $("#view_price").val(price);
 
                 $("#view_photo").attr("src",response.showdata.photo)
             }
@@ -423,64 +426,55 @@
         });
 </script>
 
+<!-- ADD_TO_CART -->
 <script>
-    // Existing scripts...
-
-    const cart = [];
-    let cartItems = [];  // Define cartItems array outside the functions to make it accessible globally
-
-    function updateCartListModal() {
-        const cartListModal = $('#cart-list-modal');
-        cartListModal.empty();
-
-        alert("Your Item is added to Cart");
-
-        cart.forEach(item => {
-            const listItem = $('<li>').text(`ID: ${item.id} NAME: ${item.name}`);
-            cartListModal.append(listItem);
-        });
-
-        // Update the cartItems array
-        cartItems = cart.map(item => item.id);
-    }
-
     $(document).on('click', '#cart_id', function() {
-        const id = $(this).data('id');
-        const name = $(this).data('name');
-        cart.push({ id, name });
+        const productId = $(this).data('id');
+        const productName = $(this).data('name');
+        const userId = $('#profile-id-modal').text();
 
-        updateCartListModal();
-    });
-</script>
-
-
-<!-- ORDER -->
-<script>
-    $(document).on('click', '#buy_id', function() {
-        const cartItems = cart.map(item => item.id);
-        // Check if the cart is empty
-        if (cartItems.length === 0) {
-            alert("Please add items to the cart before placing an order.");
-            return;
-        }
-        
-        alert(`You are about to place an order with the following items:\n${JSON.stringify(cartItems)}`);
-        
         $.ajax({
             type: "POST",
-            url: "/user_place_order",
-            data: { cartItems: cartItems },
+            url: "/add_to_cart",
+            data: {
+                productId: productId,
+                productName: productName,
+                userId: userId
+            },
             success: function(response) {
-                console.log(response);
-                $("#viewCartModal").modal('hide');
-                location.reload();
+                console.log(response); 
+                alert("Your item has been added to the cart successfully!");
+                window.location.reload();
             },
             error: function(error) {
                 console.error(error);
+                alert("Failed to add the item to the cart. Please try again.");
             }
         });
     });
+
+    $(document).on('click', '#buy_id', function() {
+    const userId = $('#profile-id-modal').text();
+
+    $.ajax({
+        type: "POST",
+        url: "/user_place_order",
+        data: {
+            id: userId
+        },
+        success: function(response) {
+            console.log(response);
+            $("#viewCartModal").modal('hide');
+            alert("Your Order has been placed...")
+            location.reload();
+        },
+        error: function(error) {
+            console.error(error);
+        }
+    });
+});
 </script>
+
 
 <script>
 
