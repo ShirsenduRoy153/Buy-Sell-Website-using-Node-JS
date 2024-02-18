@@ -39,7 +39,7 @@ app.use(passport.session())
 app.use('/', indexRouter);
 app.use(flash());
 
-app.listen({ port: 3000 }, async() => {
+app.listen({ port: 3000, hostname: '0.0.0.0'}, async() => {
     console.log('Server up on http://localhost:3000')
     console.log('Database Connected!')
 })
