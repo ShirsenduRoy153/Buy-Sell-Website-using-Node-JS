@@ -54,14 +54,46 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
-        
+
+        .category-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        img {
+            max-width: 100%;
+            height: 250px;
+            width: 250px;
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out; /* Add transition effect */
+        }
+
+        .img_logo{
+            max-width: 100%;
+            height: 50px;
+            width: 50px;
+            border-radius: 15px;
+        }
+
+        img:hover {
+            transform: scale(1.25); /* Enlarge the image on hover */
+        }
+
         .category-box img {
             max-width: 100%;
-            height: 150px;
+            height: 200px;
             border-radius: 5px;
             margin-bottom: 10px;
+            transition: transform 0.3s ease-in-out;
         }
+
+        .category-box:hover img {
+            transform: scale(1.3);
+            border: 3px solid #fff;
+        }
+
         
         footer {
             background-color: #333;
@@ -70,25 +102,17 @@
             text-align: center;
         }
         
-        .suggestions {
-            position: absolute;
-            width: 300px;
-            z-index: 1;
+        #view_modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #fff;
-            border: 1px solid #ddd;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        
-        .suggestions a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #333;
-        }
-        
-        .suggestions a:hover {
-            background-color: #eee;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
         }
         
         .category-box,
@@ -104,7 +128,7 @@
         .btn {
             border: 2px solid #c9c8c8;
             border-radius: 100px;
-            margin: 0 5px;
+            margin: 2px 5px;
         }
         
         .btn-danger {
@@ -120,6 +144,11 @@
             color: #fff;
         }
 
+        .btn-small {
+            font-size: 10px;
+            padding: 2px 5px;
+        }
+
         .category-box,
         button {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -128,7 +157,7 @@
         .category-box:hover,
         button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
         }
 
 
@@ -205,8 +234,8 @@
 
     <header class="bg-dark text-white d-flex justify-content-between align-items-center p-3">
         <div class="d-flex align-items-center">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#userProfileModal"><span style="color: #ffcc00;">👤</span> Profile</button>
-            <h1 class="mb-0">Sample <span style="font-size: 36px;">Website</span></h1>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#userProfileModal" style="margin-right: 50px;"><span style="color: #ffcc00;">👤</span> Profile </button>
+            <h1 class="mb-0"><img class="img_logo" src="https://media.giphy.com/media/6lTkyr9fLKH3Kiy8Ws/giphy.gif" alt="Login GIF" width="30"> 🌐Sample <span style="font-size: 36px;">Website🚀</span></h1>
         </div>
         <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="customSwitch" onchange="toggleSwitch(this)">
@@ -274,21 +303,6 @@
         </div>
     </div>
 
-    <section class="container">
-    {{#each products}}
-        <div class="category-box" id="category" data-id="{{this.id}}">
-            <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
-            <h3>{{this.name}}</h3>
-            {{!-- <textarea rows="4" style="border: none; overflow: auto; outline: none; resize: none;">{{this.desc}}</textarea> --}}
-            <p>${{this.price}}</p>
-            <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product</button>
-            <button type="button" class="btn add-to-cart-btn" id="cart_id" data-id="{{this.id}}" data-name="{{this.name}}">Add to Cart</button>
-        </div>
-    {{/each}}
-    </section>
-
-<button type="button" class="btn btn-primary view-cart-btn" data-toggle="modal" data-target="#viewCartModal">View Cart</button>
-
     <div class="modal" id="viewCartModal" tabindex="-1" role="dialog" aria-labelledby="viewCartModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -297,15 +311,59 @@
                 </div>
                 <div class="modal-body">
                     {{#each carts}}
-                    <div class="cart-item" data-id="{{this.order_id}}">product ID : {{this.order_id}} Name : {{this.order_name}}</div>
+                    <div class="cart-item" data-id="{{this.order_id}}">◉ {{this.order_name}}
+                    <button type="button" class="btn btn-small" id="cart_delete_id" data-id="{{this.id}}">Delete<span>🗑️</span></button>
+                    </div>
                     {{/each}}
                     <ul id="cart-list-modal"></ul>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn" id="buy_id" >Place Order</button>
+                    <button type="button" class="btn" id="buy_id" >Place Order <span>🚚</span></button>
                 </div>
             </div>
         </div>
     </div>
+
+<script>
+    var cart = [];
+    {{#each carts}}
+        cart.push("{{this.order_id}}");
+    {{/each}}
+</script>
+
+<section class="container" id="product-container">
+    {{#each products}}
+        <div class="category-box" id="category" data-id="{{this.id}}">
+            <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
+            <h3>{{this.name}}</h3>
+            <p>₹{{this.price}}<span>💷</span></p>
+            <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product <span>🔭</span></button>
+                <span id="cart_button_container_{{this.id}}"></span>
+            
+        </div>
+        <script>
+            function checkAndAddToCart(productId) {
+                var isProductInCart = cart.includes(productId);
+                if (!isProductInCart) {
+                    var htmlCode = '<button type="button" class="btn add-to-cart-btn" id="cart_id" data-id="{{this.id}}" data-name="{{this.name}}">Add to Cart <span>👜</span></button>';
+                    document.getElementById('cart_button_container_' + productId).innerHTML = htmlCode;
+                }
+                else {
+                    var htmlCode = '<button type="button" class="btn add-to-cart-btn"> <span>🏷️</span> Added to cart </button>';
+                    document.getElementById('cart_button_container_' + productId).innerHTML = htmlCode;
+                }
+
+            }
+
+            // Call the function for the current product
+            checkAndAddToCart("{{this.id}}");
+        </script>
+    {{/each}}
+</section>
+
+
+
+
+    <button type="button" class="btn btn-primary view-cart-btn" data-toggle="modal" data-target="#viewCartModal">View Cart <span>🛒</span></button>
 
     <footer class="bg-dark text-white mt-5">
         &copy; 2024 Sample Website
@@ -327,7 +385,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="view_id" class="form-control" readonly>
                     <div class="form-group">
-                        <label for="view_photo">Photo:</label>
+                        <label for="view_photo"></label>
                         <img src="" id="view_photo" height="100px" width="100px">
                     </div>
                     <div class="form-group">
@@ -352,7 +410,9 @@
     </div>
 </div>
 
+
 <script>
+
     $(document).on('click', '#view_id', function() {
         const id = $(this).data('id');
         $("#view_modal").show();
@@ -453,26 +513,55 @@
         });
     });
 
-    $(document).on('click', '#buy_id', function() {
-    const userId = $('#profile-id-modal').text();
 
-    $.ajax({
-        type: "POST",
-        url: "/user_place_order",
-        data: {
-            id: userId
-        },
-        success: function(response) {
-            console.log(response);
-            $("#viewCartModal").modal('hide');
-            alert("Your Order has been placed...")
-            location.reload();
-        },
-        error: function(error) {
-            console.error(error);
-        }
+
+    $(document).on('click', '#cart_delete_id', function() {
+        const userId = $(this).data('id');
+        const elementToRemove = $(this).closest('.cart-item');
+        elementToRemove.remove();
+        $.ajax({
+            type: "POST",
+            url: "/user_cart_delete",
+            data: {
+                id: userId
+            },
+            success: function(response) {
+                console.log(response); 
+            },
+            error: function(error) {
+                console.error(error);
+                alert("Failed to add the item to the cart. Please try again.");
+            }
+        });
     });
+
+    $(document).on('click', '#buy_id', function() {
+        if(cart.length === 0)
+        {
+            alert("Your cart is empty !!");
+        }
+        else{
+            const userId = $('#profile-id-modal').text();
+
+            $.ajax({
+                type: "POST",
+                url: "/user_place_order",
+                data: {
+                    id: userId
+                },
+                success: function(response) {
+                    console.log(response);
+                    $("#viewCartModal").modal('hide');
+                    alert("Your Order has been placed...")
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
 });
+
 </script>
 
 

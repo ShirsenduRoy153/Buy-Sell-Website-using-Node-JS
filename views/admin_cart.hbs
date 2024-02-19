@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Table Template</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+
+        #main {
+            transition: margin-left .5s;
+            padding: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .table tbody td {
+            overflow-wrap: break-word;
+            max-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <div class="header">
+        <h2>Cart Details</h2>
+    </div>
+
+    <br><br><br> {{!-- TABLE --}}
+
+    <div class="container" id="main">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Name of the product</th>
+                    <th>category</th>
+                    <th>Customer ID</th>
+                    <th>Customer's Name</th>
+                    <th>Customer's Email</th>
+                    <th>Customer's Address</th>
+                    <th>Customer's Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each carts}}
+                <tr>
+                    <td>{{this.order_id}}</td>
+                    <td>{{this.order_name}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.customer_id}}</td>
+                    <td>{{this.userName}}</td>
+                    <td>{{this.userEmail}}</td>
+                    <td>{{this.userAddress}}</td>
+                    <td>{{this.userPhone}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

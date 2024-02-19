@@ -104,6 +104,10 @@
             border-color: #CBC3E3;
         }
 
+        .with-border-side {
+            border: 5px solid #fff;
+        }
+
         /* Add the following CSS code to your existing styles */
 
     .modal-dialog {
@@ -145,7 +149,7 @@
     <br><br><br>
 
     <div class="sidebar">
-        <button type="button" class="product-btn" id="category_id">Add Category</button>
+        <button type="button" class="product-btn with-border-side" id="category_id">Add Category</button>
     </div>
 
 
@@ -264,7 +268,7 @@ $(document).ready(function(){
                     <input type="hidden" id="edit_id" name="edit_id" class="form-control">
                     <div class="form-group">
                         <label for="edit_name">Category's Name:</label>
-                        <input type="text" id="edit_name" name="edit_name" class="form-control">
+                        <input type="text" id="edit_name" name="edit_name" class="form-control" readonly>
                     </div>
                     <div class="form-group">
                         <label for="desc">Description:</label>

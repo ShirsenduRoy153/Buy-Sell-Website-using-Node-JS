@@ -22,7 +22,7 @@
             text-decoration: none;
             font-size: 20px;
             color: #fff;
-            display: inline-block; /* Make the buttons inline */
+            display: block; /* Make the buttons inline */
             background-color: #8FBC8F; /* Set the background color to green */
             border: none;
             border-radius: 25px;
@@ -100,6 +100,10 @@
             border-color: #CBC3E3;
         }
 
+        .with-border-side {
+            border: 5px solid #fff;
+        }
+
         /* Add the following CSS code to your existing styles */
 
     .modal-dialog {
@@ -120,8 +124,8 @@
     }
 
     .modal {
-    overflow-y: auto;
-}
+        overflow-y: auto;
+    }
 
 
     </style>
@@ -139,7 +143,7 @@
     <br><br><br>
 
     <div class="sidebar">
-        <button type="button" class="product-btn" id="product_id">Add Products</button>
+        <button type="button" class="product-btn with-border-side" id="product_id">Add Products</button>
     </div>
 
 {{!-- ADD PRODUCT --}}
@@ -377,7 +381,6 @@ $(document).ready(function(){
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" id="save_changes_btn" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>

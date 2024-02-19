@@ -13,12 +13,13 @@
 
 
     .container {
-        margin-top: 50px;
+        margin-top: 80px;
     }
 
     .card {
         border-radius: 10px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        background-color: #868d93;
+        box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.2);
         transition: 0.3s;
         padding: 20px;
         margin-bottom: 20px;
@@ -29,12 +30,14 @@
     }
 
     .card-title {
+        color: #ffffff;
         font-size: 24px;
         font-weight: bold;
         margin-bottom: 20px;
     }
 
     .card-text {
+        color: #ffffff;
         font-size: 18px;
         margin-bottom: 20px;
     }
@@ -57,7 +60,7 @@
         width: 210px;
         position: fixed;
         z-index: 1;
-        top: 65px;
+        top: 50px;
         left: 0;
         background-color: #868d93;
         overflow-x: hidden;
@@ -88,12 +91,24 @@
         border-color: #CBC3E3;
     }
 
+    .with-border {
+        border: 5px solid #ffffff;
+    }
+
+    .with-border-side {
+        border: 5px solid #fff;
+    }
+
     .main_header {
         background-color: #000000;
         color: #fff;
         text-align: center;
         font-size: 20px;
         font-weight: bold;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000; /* Set a high z-index to make sure it appears above other elements */
     }
 
     .main {
@@ -112,14 +127,15 @@
 
     .profile-button {
         position: fixed;
-        top: 10px;
+        top: 8px;
         right: 20px;
         background-color: #fff;
-        border: 2px solid #8FBC8F;
+        border: 5px solid #8FBC8F;
         border-radius: 100%;
         padding: 8px;
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
         transition: all 0.3s;
+        z-index: 1001; /* Set a higher z-index to appear above the fixed header */
     }
 
     .profile-button img {
@@ -169,10 +185,11 @@
         <div class="header">Admin Panel</div>
     </div>
     <div class="sidebar">
-        <a href="/admin_category" class="btn btn-primary">Category</a>
-        <a href="/admin_table" class="btn btn-primary" >Tables</a>
-        <a href="/admin_order" class="btn btn-primary" >Orders</a>
-        <a href="/admin_user" class="btn btn-primary" >Customer Details</a>
+        <a href="/admin_category" class="btn btn-primary with-border-side">Category</a>
+        <a href="/admin_table" class="btn btn-primary with-border-side">Tables</a>
+        <a href="/admin_order" class="btn btn-primary with-border-side">Orders</a>
+        <a href="/admin_cart" class="btn btn-primary with-border-side">Cart Details</a>
+        <a href="/admin_user" class="btn btn-primary with-border-side">Customer Details</a>
     </div>
     <div class="main">
         <div class="container">
@@ -181,21 +198,21 @@
                     <div class="card">
                         <div class="card-title">Total Sales</div>
                         <div class="card-text">$ {{totalPrice}}</div>
-                        <a href="/admin_order" class="btn btn-primary">View Details</a>
+                        <a href="/admin_order" class="btn btn-primary with-border">View Details</a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-title">Total Orders</div>
                         <div class="card-text">{{numberOfOrders}}</div>
-                        <a href="/admin_order" class="btn btn-primary">View Details</a>
+                        <a href="/admin_order" class="btn btn-primary with-border">View Details</a>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-title">Total Customers</div>
                         <div class="card-text">{{numberOfCustomer}}</div>
-                        <a href="/admin_user" class="btn btn-primary">View Details</a>
+                        <a href="/admin_user" class="btn btn-primary with-border">View Details</a>
                     </div>
                 </div>
             </div>

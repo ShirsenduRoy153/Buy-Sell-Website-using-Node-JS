@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 
 const { cart } = require('../models');
 const { user } = require('../models');
@@ -9,6 +10,7 @@ const { category } = require('../models');
 const { product } = require('../models');
 const { order } = require('../models');
 const passport = require('passport');
+// const { user, product } = require('../models');
 const auth_admin = require("../middleware/auth_admin");
 //const auth_main_user = require("../middleware/auth_main_user");
 
@@ -99,12 +101,13 @@ router.get("/user_main_in/:id", async(req, res, next) => {
 
 router.get("/user_category_in/:name/:userId", async(req, res, next) => {
     console.log(req.body)
-    let products = await product.findAll({
+    const products = await product.findAll({
         where: {
             category: req.params.name
         }
     });
-    let carts = await cart.findAll({
+    const carts = await cart.findAll({
+        //full outer join belongs to, hash many
         where: {
             customer_id: req.params.userId
         }
@@ -115,13 +118,36 @@ router.get("/user_category_in/:name/:userId", async(req, res, next) => {
     res.render('user_category_in', { title: 'user_category_in', products, users, carts })
 })
 
+
+//CART DETAILS
 router.post('/add_to_cart', async(req, res) => {
     console.log(req.body);
     const customer_id = req.body.userId;
     const order_id = req.body.productId;
     const order_name = req.body.productName;
 
-    await cart.create({ customer_id, order_id, order_name });
+    const products = await product.findOne({
+        where: {
+            id: order_id
+        },
+        attributes: ['name', 'category', 'price'],
+    });
+    // const productName = products.name;
+    const category = products.category;
+    //const price = products.price;
+
+    const users = await user.findOne({
+        where: {
+            id: customer_id
+        },
+        attributes: ['firstname', 'phone', 'address', 'lastname', 'email'],
+    });
+    const userName = users.firstname + " " + users.lastname;
+    const userAddress = users.address;
+    const userEmail = users.email;
+    const userPhone = users.phone;
+
+    await cart.create({ customer_id, order_id, order_name, category, userName, userEmail, userAddress, userPhone });
 
     res.status(200).json({
         success: true,
@@ -129,6 +155,30 @@ router.post('/add_to_cart', async(req, res) => {
     });
 })
 
+router.post('/user_cart_delete', async(req, res) => {
+
+    const id = req.body.id
+
+    await cart.destroy({
+        where: {
+            id
+        }
+    })
+
+    res.json({
+        success: true,
+        code: 200,
+        message: "User deleted succesfully"
+    })
+});
+
+
+
+
+
+// ORDER DETAILS
+// ORDER DETAILS
+// ORDER DETAILS
 router.post('/user_place_order', async(req, res) => {
     try {
         const userId = req.body.id;
@@ -210,6 +260,8 @@ router.post('/user_postlogin', async(req, res) => {
         });
     }
 
+    //const passwordMatch = await bcrypt.compare(password, existingUser.password);
+
     if (password !== existingUser.password) {
         return res.status(401).json({
             success: false,
@@ -257,6 +309,10 @@ router.post('/user_postsignup', async(req, res) => {
     const state = req.body.state
     const city = req.body.city
     const password = req.body.password
+        // const temp_password = req.body.password
+        // const saltRounds = 10;
+        // const password = await bcrypt.hash(temp_password, saltRounds);
+
     console.log(req.body)
     const newUser = await user.create({ firstname, lastname, email, phone, password, address, state, city })
     const userId = newUser.id;
@@ -397,12 +453,20 @@ router.get("/admin_user", async(req, res, next) => {
     res.render('admin_user', { title: 'admin_user', users })
 })
 
-
+//ORDERS
 router.get("/admin_order", async(req, res, next) => {
     orders = await order.findAll({
         raw: true
     })
     res.render('admin_order', { title: 'admin_order', orders })
+})
+
+//CART DETAILS
+router.get("/admin_cart", async(req, res, next) => {
+    carts = await cart.findAll({
+        raw: true
+    })
+    res.render('admin_cart', { title: 'admin_cart', carts })
 })
 
 router.get("/admin_category", async(req, res, next) => {
@@ -444,9 +508,21 @@ router.post('/post_cat_delete', async(req, res) => {
 
     const id = req.body.id
 
+    categories = await category.findOne({
+        where: {
+            id: id
+        },
+    })
+
     await category.destroy({
         where: {
             id
+        }
+    })
+
+    await product.destroy({
+        where: {
+            category: categories.name
         }
     })
 
@@ -531,7 +607,7 @@ router.post('/post_edit', async(req, res) => {
     const category = req.body.edit_category;
     const price = req.body.edit_qty;
 
-    await admin_shoes.update({ name, desc, category, price }, {
+    await product.update({ name, desc, category, price }, {
         where: {
             id: id
         }
@@ -566,57 +642,5 @@ router.post('/post_delete', async(req, res) => {
 //---X---//
 //---X---//
 //---X---//
-
-
-//---------------------------------------------------V I E W----------------------------------------//
-router.post("/view-details-shoes", async(req, res) => {
-    const showdata = await admin_shoes.findOne({
-        where: {
-            id: req.body.id
-        },
-        attributes: ['p_id', 'p_name', 'category', 'price', 'photo'],
-    })
-    res.json({ showdata })
-})
-
-//----------------------------------------------------E D I T-----------------------------------//
-
-router.post('/post_edit_shoes', async(req, res) => {
-    console.log(req.body);
-    const id = req.body.edit_id;
-    const p_id = req.body.edit_p_id;
-    const name = req.body.edit_name;
-    const category = req.body.edit_category;
-    const price = req.body.edit_qty;
-
-    await admin_shoes.update({ p_id, name, category, price }, {
-        where: {
-            id: id
-        }
-    })
-    res.json({
-        success: true,
-        code: 200
-    })
-})
-
-
-//-----------------------------D E L E T E-------------------------------//
-router.post('/post_delete_shoes', async(req, res) => {
-
-    const id = req.body.id
-
-    await admin_shoes.destroy({
-        where: {
-            id
-        }
-    })
-
-    res.json({
-        success: true,
-        code: 200,
-        message: "User deleted succesfully"
-    })
-});
 
 module.exports = router;

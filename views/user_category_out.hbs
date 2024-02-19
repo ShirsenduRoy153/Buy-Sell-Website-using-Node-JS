@@ -44,6 +44,39 @@
             flex-wrap: wrap;
             justify-content: space-around;
         }
+
+        #view_modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        img {
+            max-width: 100%;
+            height: 250px;
+            width: 250px;
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out; /* Add transition effect */
+        }
+
+        .img_logo{
+            max-width: 100%;
+            height: 50px;
+            width: 50px;
+            border-radius: 15px;
+        }
+
+        img:hover {
+            transform: scale(1.25); /* Enlarge the image on hover */
+        }
+
         
         .category-box {
             width: 200px;
@@ -54,14 +87,27 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
-        
+
+        .category-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
         .category-box img {
             max-width: 100%;
-            height: 150px;
+            height: 200px;
             border-radius: 5px;
             margin-bottom: 10px;
+            transition: transform 0.3s ease-in-out;
         }
+
+        .category-box:hover img {
+            transform: scale(1.3);
+            border: 3px solid #fff;
+        }
+
         
         footer {
             background-color: #333;
@@ -69,42 +115,11 @@
             padding: 10px;
             text-align: center;
         }
-        
-        .suggestions {
-            position: absolute;
-            width: 300px;
-            z-index: 1;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        
-        .suggestions a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #333;
-        }
-        
-        .suggestions a:hover {
-            background-color: #eee;
-        }
-        
-        .category-box,
-        button {
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        .category-box:hover,
-        button:hover {
-            transform: scale(1.05);
-        }
-        
+    
         .btn {
             border: 2px solid #c9c8c8;
             border-radius: 100px;
-            margin: 0 5px;
+            margin: 3px 5px;
         }
         
         .btn-danger {
@@ -112,7 +127,6 @@
             background-color: #070401;
             color: #fff;
         }
-        /* Style for profile button */
         
         .btn-primary {
             border-color: #ffffff;
@@ -128,7 +142,11 @@
         .category-box:hover,
         button:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        #view_modal {
+            color: #000; /* Set text color to black */
         }
 
 
@@ -190,10 +208,6 @@
         section {
             display: none;
         }
-
-        #viewCartModal {
-            color: #000; /* Set text color to black */
-        }
     </style>
 </head>
 
@@ -205,7 +219,7 @@
 
     <header class="bg-dark text-white d-flex justify-content-between align-items-center p-3">
         <div class="d-flex align-items-center">
-            <h1 class="mb-0">Sample <span style="font-size: 36px;">Website</span></h1>
+            <h1 class="mb-0"><img class="img_logo" src="https://media.giphy.com/media/6lTkyr9fLKH3Kiy8Ws/giphy.gif" alt="Login GIF" width="30"> 🌐Sample <span style="font-size: 36px;">Website🚀</span></h1>
         </div>
         <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="customSwitch" onchange="toggleSwitch(this)">
@@ -229,14 +243,14 @@
                 <img src="{{this.photo}}" alt="Hoodies" class="img-fluid">
                 <h3>{{this.name}}</h3>
                 {{!-- <textarea rows="4" style="border: none; overflow: auto; outline: none; resize: none;">{{this.desc}}</textarea> --}}
-                <p>${{this.price}}</p>
-                <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product</button>
-                <button type="button" class="btn add-to-cart-btn" onclick="else_log()">Add to Cart</button>
+                <p>₹{{this.price}} <span>💷</span></p>
+                <button type="button" class="btn" id="view_id" data-id="{{this.id}}">View Product<span>🔭</span></button>
+                <button type="button" class="btn add-to-cart-btn" onclick="else_log()">Add to Cart<span>👜</span></button>
             </div>
         {{/each}}
     </section>
 
-<button type="button" class="btn btn-primary view-cart-btn" onclick="else_log()">View Cart</button>
+<button type="button" class="btn btn-primary view-cart-btn" onclick="else_log()">View Cart <span>🛒</span></button>
 
     <footer class="bg-dark text-white mt-5">
         &copy; 2024 Sample Website

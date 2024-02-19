@@ -43,7 +43,8 @@
         }
         
         .category-box {
-            width: 200px;
+            width: 300px;
+            height: 350px;
             margin: 20px;
             padding: 10px;
             background-color: #fff;
@@ -51,13 +52,29 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             cursor: pointer;
+            transition: transform 0.3s ease-in-out;
         }
+        
         
         .category-box img {
             max-width: 100%;
             height: 150px;
             border-radius: 5px;
             margin-bottom: 10px;
+        }
+
+        .dark-mode .category-box {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .category-box textarea {
+            color: #fff; /* Set text color for dark mode */
+            background-color: #333; /* Set background color for dark mode */
+            border: none;
+            overflow: auto;
+            outline: none;
+            resize: none;
         }
         
         footer {
@@ -67,7 +84,7 @@
             text-align: center;
         }
         
-        .suggestions {
+        .searchbar {
             position: absolute;
             width: 300px;
             z-index: 1;
@@ -77,14 +94,14 @@
             overflow-y: auto;
         }
         
-        .suggestions a {
+        .searchbar a {
             display: block;
             padding: 10px;
             text-decoration: none;
             color: #333;
         }
         
-        .suggestions a:hover {
+        .searchbar a:hover {
             background-color: #eee;
         }
         
@@ -95,7 +112,7 @@
         
         .category-box:hover,
         button:hover {
-            transform: scale(1.05);
+            transform: scale(1.20);
         }
         
         .btn {
@@ -151,20 +168,20 @@
             color: #fff;
         }
         
-        .dark-mode .suggestions {
+        .dark-mode .searchbar {
             background-color: #444;
-            /* Update the suggestions background color */
+            /* Update the searchbar background color */
             border-color: #555;
             color: #fff;
         }
         
-        .dark-mode .suggestions a {
+        .dark-mode .searchbar a {
             color: #fff;
         }
         
-        .dark-mode .suggestions a:hover {
+        .dark-mode .searchbar a:hover {
             background-color: #666;
-            /* Update the suggestions hover background color */
+            /* Update the searchbar hover background color */
         }
         
         section {
@@ -177,11 +194,11 @@
 
     <header class="bg-dark text-white d-flex justify-content-between align-items-center p-3">
         <div class="d-flex align-items-center">
-            <h1 class="mb-0">Sample <span style="font-size: 36px;">Website</span></h1>
+            <h1 class="mb-0"><img src="https://media.giphy.com/media/6lTkyr9fLKH3Kiy8Ws/giphy.gif" alt="Login GIF" width="60" style="border-radius: 25px;"> 🌐Sample <span style="font-size: 36px;">Website🚀</span></h1>
         </div>
         <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="customSwitch" onchange="toggleSwitch(this)">
-            <label class="custom-control-label" for="customSwitch">Dark Mode</label>
+            <label class="custom-control-label" for="customSwitch">Dark Mode </label>
         </div>
         <div>
             <button class="btn btn-danger" onclick="login()">
@@ -191,12 +208,13 @@
     </header>
 
 
-    <nav class="bg-secondary text-white">
-        {{!-- <div class="position-relative">
-            <input type="text" class="form-control" id="searchInput" placeholder="Search for a category" oninput="showSuggestions()">
-            <div class="suggestions" id="suggestions"></div>
-        </div> --}}
-    </nav>
+        <nav class="bg-secondary text-white">
+            <div style="display: flex; padding: 10px;">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search for a category 🔍" oninput="showSuggestions()" style="width: 300px;">
+                <div class="searchbar" id="searchbar" style="flex: 1;"></div>
+                <img class="img_logo" src="https://media.giphy.com/media/qDa4qpPsBbC2IJG88B/giphy.gif" alt="Login GIF" width="40" style="border-radius: 50px; margin-left: 10px;">
+            </div>
+        </nav>
 
     <section class="container">
         {{#each categories}}
@@ -218,24 +236,32 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    const suggestions = [];
+    const categories = [
+        {{#each categories}}
+            { id: {{this.id}}, name: '{{this.name}}' , desc: '{{this.desc}}', photo: '{{this.photo}}'},
+        {{/each}}
+    ];
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('section').style.display = 'flex';
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('section').style.display = 'flex';
 
-    const categoryBoxes = document.querySelectorAll('.category-box');
-    categoryBoxes.forEach(box => {
-        box.addEventListener('click', function () {
-            const name = box.querySelector('h3').innerText;
-
-            const url = `/user_category_out/${encodeURIComponent(name)}`;
-
-            window.location.href = url;
+        const categoryBoxes = document.querySelectorAll('.category-box');
+        categoryBoxes.forEach(box => {
+            box.addEventListener('click', function () {
+                const name = box.querySelector('h3').innerText;
+                const url = `/user_category_out/${encodeURIComponent(name)}`;
+                window.location.href = url;
+            });
         });
     });
-});
 
-
+    document.addEventListener('click', function (event) {
+        const searchInput = document.getElementById('searchInput');
+        const searchbar = document.getElementById('searchbar');
+        if (!searchInput.contains(event.target) && !searchbar.contains(event.target)) {
+            searchbar.style.display = 'none';
+        }
+    });
 
     function login() {
         window.location.href = 'http://localhost:3000/user_main_login';
@@ -250,9 +276,49 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('section').style.display = 'flex';
-    });
+    function updateCategories(input) {
+        const section = document.querySelector('section');
+        // Clear existing categories
+        section.innerHTML = '';
+
+        if (input.trim() === '') {
+            // If the search input is empty, show all categories
+            categories.forEach(category => appendCategory(category));
+        } else {
+            const filteredCategories = categories.filter(category => category.name.toLowerCase().includes(input));
+            if (filteredCategories.length > 0) {
+                filteredCategories.forEach(category => appendCategory(category));
+            } else {
+                // Display a message when no matching categories are found
+                section.innerHTML = '<p>No matching categories found.</p>';
+            }
+        }
+    }
+
+    function showSuggestions() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        updateCategories(input);
+    }
+
+    function appendCategory(category) {
+        const section = document.querySelector('section');
+        const categoryBox = document.createElement('div');
+        categoryBox.classList.add('category-box');
+        categoryBox.setAttribute('data-id', category.id);
+
+        categoryBox.innerHTML = `
+            <img src="${category.photo}" alt="${category.name}" class="img-fluid">
+            <h3>${category.name}</h3>
+            <textarea rows="4" style="border: none; overflow: auto; outline: none; resize: none;">${category.desc}</textarea>
+        `;
+
+        categoryBox.addEventListener('click', function () {
+            const url = `/user_category_out/${encodeURIComponent(category.name)}`;
+            window.location.href = url;
+        });
+
+        section.appendChild(categoryBox);
+    }
 </script>
 
 </body>

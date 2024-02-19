@@ -61,6 +61,7 @@
                     <th>Customer's Email</th>
                     <th>Customer's Address</th>
                     <th>Customer's Phone</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -75,6 +76,22 @@
                     <td>{{this.userEmail}}</td>
                     <td>{{this.userAddress}}</td>
                     <td>{{this.userPhone}}</td>
+                    <td>
+                        <ul class="delivery-status-radio">
+                            <li>
+                                <label>
+                                    <input type="radio" name="deliveryStatus{{this.id}}" value="delivered"
+                                        {{#if this.delivered}}checked{{/if}}> Delivered
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="radio" name="deliveryStatus{{this.id}}" value="not_delivered"
+                                        {{#unless this.delivered}}checked{{/unless}}> Not Delivered
+                                </label>
+                            </li>
+                        </ul>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
