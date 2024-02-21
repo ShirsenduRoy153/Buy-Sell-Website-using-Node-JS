@@ -605,7 +605,7 @@ router.post('/post_edit', async(req, res) => {
     const name = req.body.edit_name;
     const desc = req.body.edit_desc;
     const category = req.body.edit_category;
-    const price = req.body.edit_qty;
+    const price = req.body.edit_price;
 
     await product.update({ name, desc, category, price }, {
         where: {
