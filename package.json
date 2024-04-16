@@ -16,10 +16,18 @@
     },
     "main": "app.js",
     "engines": {
+<<<<<<< HEAD
         "node": "20.x"
+=======
+        "node": "18.x"
+>>>>>>> 4b2ff3db44705d21c21eb91294d130c997211b96
     },
     "scripts": {
         "start": "node app.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4b2ff3db44705d21c21eb91294d130c997211b96
