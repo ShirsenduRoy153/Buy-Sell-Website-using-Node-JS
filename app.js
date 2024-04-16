@@ -39,7 +39,9 @@ app.use(passport.session())
 app.use('/', indexRouter);
 app.use(flash());
 
-app.listen({ port: 3000}, async() => {
+port = process.env.PORT || 3000;
+
+app.listen({ port }, async() => {
     console.log('Server up on http://localhost:3000')
     console.log('Database Connected!')
 })
